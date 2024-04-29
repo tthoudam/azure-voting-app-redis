@@ -6,11 +6,11 @@ resources:
 - repo: self
 
 variables:
-- template: templates/variables/vars.yml 
+- template: templates/variables/vars.yaml 
 
 pool:
   name: az-selfhosted
 
 stages:
-- template: templates/stages/ci.yml
-- template: templates/stages/cd.yml
+- template: templates/stages/ci.yaml
+- template: templates/stages/cd.yaml
