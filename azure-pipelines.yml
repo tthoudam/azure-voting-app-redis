@@ -54,9 +54,9 @@ stages:
         TargetFolder: '$(Build.ArtifactStagingDirectory)'
     - task: PublishPipelineArtifact@1
       inputs:
-        artifactName: 'manifests'
-        path: 'manifests'
-
+        targetPath: '$(Pipeline.Workspace)'
+        artifact: 'manifests'
+        publishLocation: 'pipeline'
 - stage: CD
   dependsOn: CI
   displayName: Deploy to AKS
@@ -88,7 +88,7 @@ stages:
         kubernetesServiceConnection: $(k8sServiceConnection)
         namespace: $(k8sNamespace)
         manifests: |
-          $(System.ArtifactsDirectory)/manifests/$(voteAppId).yaml
+          $(Pipeline.Workspace)/pipeline/$(voteAppId).yaml
         imagePullSecrets: |
           $(imagePullSecret)
         containers: |
