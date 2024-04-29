@@ -11,6 +11,7 @@ variables:
   dockerfilePath: '$(Build.SourcesDirectory)/azure-vote/Dockerfile'
   tag: '$(Build.BuildId)'
   imagePullSecret: 'acrpullsecret'
+  k8sServiceConnection: 'aks-lbg-test-voting-app'
   k8sNamespace: 'votingapp'
 
 pool:
@@ -71,7 +72,7 @@ stages:
       displayName: Create Image Pull Secret
       inputs:
         action: 'createSecret'
-        kubernetesServiceConnection: 'aks-lbg-test-voting-app'
+        kubernetesServiceConnection: $(k8sServiceConnection)
         namespace: $(k8sNamespace)
         secretType: 'dockerRegistry'
         secretName: $(imagePullSecret)
@@ -80,10 +81,10 @@ stages:
       displayName: Deploy to Kubernetes cluster
       inputs:
         action: deploy
-        kubernetesServiceConnection: 'aks-lbg-test-voting-app'
+        kubernetesServiceConnection: $(k8sServiceConnection)
         namespace: $(k8sNamespace)
         manifests: |
-          $(Build.ArtifactStagingDirectory)/manifests/$(voteAppId).yml
+          $(Build.ArtifactStagingDirectory)/manifests/$(voteAppId).yaml
         imagePullSecrets: |
           $(imagePullSecret)
         containers: |
