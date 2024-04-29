@@ -59,7 +59,7 @@ stages:
 - stage: CD
   dependsOn: CI
   displayName: Deploy to AKS
-  condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/master'))
+  condition: eq(variables['build.sourceBranch'], 'refs/heads/master')
   jobs:
   - deployment: Deploy
     displayName: Deploy to Kubernetes
