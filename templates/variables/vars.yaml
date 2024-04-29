@@ -1,0 +1,9 @@
+variables:
+  dockerRegistryServiceConnection: '0b24e5a0-365e-498c-8751-3fe89e16ffa3'
+  imageRepository: 'tthoudamazurevotingappredis'
+  containerRegistry: 'crlbgvoteapptestuks2.azurecr.io'
+  dockerfilePath: '$(Build.SourcesDirectory)/azure-vote/Dockerfile'
+  tag: '$(Build.BuildId)'
+  imagePullSecret: 'acrpullsecret'
+  k8sServiceConnection: 'aks-lbg-test-voting-app'
+  k8sNamespace: 'votingapp'
