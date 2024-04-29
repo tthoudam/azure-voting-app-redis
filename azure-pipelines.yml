@@ -19,8 +19,6 @@ variables:
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
 
-pool:
-  name: az-selfhosted
 stages:
 - stage: Build
   displayName: Build and push stage
@@ -41,6 +39,11 @@ stages:
           $(tag)
     - bash: |
        echo "##vso[task.setvariable variable=voteAppId;isOutput=true]voteapp_$(Build.BuildId)_$(date '+%d%m%Y_%H_%M_%S')"
+  - job: RenameCopy
+    displayName: Rename and Copy File
+    pool:
+      name: az-selfhosted
+    steps:
     - task: Bash@3
       displayName: Rename file
       inputs:
@@ -52,10 +55,14 @@ stages:
       inputs:
         Contents: 'azure-vote-all-in-one-redis-2.yaml'
         TargetFolder: '$(Build.ArtifactStagingDirectory)'
-    - task: PublishBuildArtifacts@1
-      inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-        ArtifactName: 'drop'
-        publishLocation: 'Container'
-
+  - job: Publish
+    displayName: Publish
+    pool:
+      name: az-selfhosted
+    steps:
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+          ArtifactName: 'drop'
+          publishLocation: 'Container'
 
