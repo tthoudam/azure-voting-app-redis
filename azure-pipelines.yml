@@ -87,7 +87,7 @@ stages:
         kubernetesServiceConnection: $(k8sServiceConnection)
         namespace: $(k8sNamespace)
         manifests: |
-          $(Build.ArtifactStagingDirectory)/manifest/$(voteAppId).yaml
+          $(Build.ArtifactStagingDirectory)/$(voteAppId).yaml
         imagePullSecrets: |
           $(imagePullSecret)
         containers: |
