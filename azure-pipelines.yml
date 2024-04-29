@@ -43,8 +43,9 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-          echo "##vso[task.setvariable variable=voteAppId]voteap_$(Build.BuildId)_$(date '+%d/%m/%Y %H:%M:%S')"
+          echo "##vso[task.setvariable variable=sauce]crushed tomatoes"
+          #echo "##vso[task.setvariable variable=voteAppId]voteap_$(Build.BuildId)_$(date '+%d/%m/%Y %H:%M:%S')"
     - task: Bash@3
       inputs:
         targetType: 'inline'
-        script: 'echo "my environment variable is $voteAppId"'
+        script: 'echo "my environment variable is $sauce"'
