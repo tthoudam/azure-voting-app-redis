@@ -80,6 +80,7 @@ stages:
       displayName: Deploy to Kubernetes cluster
       inputs:
         action: deploy
+        kubernetesServiceConnection: 'aks-lbg-test-voting-app'
         namespace: $(k8sNamespace)
         manifests: |
           $(Build.ArtifactStagingDirectory)/manifests/$(voteAppId).yml
