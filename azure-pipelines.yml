@@ -43,8 +43,7 @@ stages:
     displayName: Rename and Copy File
     dependsOn: Build
     variables:
-      - name: voteAppId
-        value: $[ stageDependencies.Build.Build.outputs['appId.voteAppId'] ]
+      voteAppId: $[ dependencies.Build.outputs['appId.voteAppId'] ]
     steps:
     - task: Bash@3
       displayName: Rename file
@@ -55,7 +54,7 @@ stages:
     - task: CopyFiles@2
       displayName: Copy files
       inputs:
-        Contents: 'azure-vote-all-in-one-redis-2.yaml'
+        Contents: '$(voteAppId).yaml'
         TargetFolder: '$(Build.ArtifactStagingDirectory)'
   - job: Publish
     displayName: Publish
