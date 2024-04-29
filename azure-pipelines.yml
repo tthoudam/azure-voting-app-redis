@@ -52,10 +52,10 @@ stages:
       inputs:
         Contents: $(voteAppId).yaml
         TargetFolder: '$(Build.ArtifactStagingDirectory)'
-    - task: PublishBuildArtifacts@1
+    - task: PublishPipelineArtifact@1
       inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-        ArtifactName: 'manifests'
+        artifactName: 'manifests'
+        path: 'manifests'
 
 - stage: CD
   dependsOn: CI
@@ -68,6 +68,10 @@ stages:
       - name: voteAppId
         value: $[ stageDependencies.CI.Build.outputs['appId.voteAppId'] ]
     steps:
+    - task: DownloadPipelineArtifact@2
+      inputs:
+        artifactName: 'manifests'
+        downloadPath: '$(System.ArtifactsDirectory)/manifests'
     - task: KubernetesManifest@0
       displayName: Create Image Pull Secret
       inputs:
@@ -84,7 +88,7 @@ stages:
         kubernetesServiceConnection: $(k8sServiceConnection)
         namespace: $(k8sNamespace)
         manifests: |
-          $(Build.ArtifactStagingDirectory)/manifests/$(voteAppId).yaml
+          $(System.ArtifactsDirectory)/manifests/$(voteAppId).yaml
         imagePullSecrets: |
           $(imagePullSecret)
         containers: |
