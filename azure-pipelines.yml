@@ -59,36 +59,40 @@ stages:
 - stage: CD
   dependsOn: CI
   displayName: Deploy to AKS
-  #condition: eq(variables['build.sourceBranch'], 'refs/heads/master'))
+  condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/master'))
   jobs:
-  - job: Deploy
+  - deployment: Deploy
     displayName: Deploy to Kubernetes
+    environment: 'test'
     variables:
       - name: voteAppId
         value: $[ stageDependencies.CI.Build.outputs['appId.voteAppId'] ]
-    steps:
-    - task: DownloadPipelineArtifact@2
-      inputs:
-        artifactName: 'manifests'
-        downloadPath: '$(Build.ArtifactStagingDirectory)'
-    - task: KubernetesManifest@0
-      displayName: Create Image Pull Secret
-      inputs:
-        action: 'createSecret'
-        kubernetesServiceConnection: $(k8sServiceConnection)
-        namespace: $(k8sNamespace)
-        secretType: 'dockerRegistry'
-        secretName: $(imagePullSecret)
-        dockerRegistryEndpoint: '$(dockerRegistryServiceConnection)'
-    - task: KubernetesManifest@0
-      displayName: Deploy to Kubernetes cluster
-      inputs:
-        action: deploy
-        kubernetesServiceConnection: $(k8sServiceConnection)
-        namespace: $(k8sNamespace)
-        manifests: |
-          $(Build.ArtifactStagingDirectory)/$(voteAppId).yaml
-        imagePullSecrets: |
-          $(imagePullSecret)
-        containers: |
-          $(containerRegistry)/$(imageRepository):$(tag)
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: DownloadPipelineArtifact@2
+            inputs:
+              artifactName: 'manifests'
+              downloadPath: '$(Build.ArtifactStagingDirectory)'
+          - task: KubernetesManifest@0
+            displayName: Create Image Pull Secret
+            inputs:
+              action: 'createSecret'
+              kubernetesServiceConnection: $(k8sServiceConnection)
+              namespace: $(k8sNamespace)
+              secretType: 'dockerRegistry'
+              secretName: $(imagePullSecret)
+              dockerRegistryEndpoint: '$(dockerRegistryServiceConnection)'
+          - task: KubernetesManifest@0
+            displayName: Deploy to Kubernetes cluster
+            inputs:
+              action: deploy
+              kubernetesServiceConnection: $(k8sServiceConnection)
+              namespace: $(k8sNamespace)
+              manifests: |
+                $(Build.ArtifactStagingDirectory)/$(voteAppId).yaml
+              imagePullSecrets: |
+                $(imagePullSecret)
+              containers: |
+                $(containerRegistry)/$(imageRepository):$(tag)
