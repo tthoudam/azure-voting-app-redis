@@ -1,8 +1,13 @@
+parameters:
+  - name: agentpool
+    default: 'az-selfhosted'
 stages:
 - stage: CI
   displayName: Build, push, publish stage
   jobs:
   - job: Build
+    pool:
+      name: ${{ parameters.agentpool }} # Not required but to demonstrate use of parameters
     displayName: Build
     steps:
     - task: Docker@2
@@ -28,7 +33,7 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-          mv azure-vote-all-in-one-redis.yaml $(voteAppId).yaml
+          mv $(k8sManifestName).yaml $(voteAppId).yaml
     - task: CopyFiles@2
       displayName: Copy files
       inputs:

@@ -7,3 +7,4 @@ variables:
   imagePullSecret: 'acrpullsecret'
   k8sServiceConnection: 'aks-lbg-test-voting-app'
   k8sNamespace: 'votingapp'
+  k8sManifestName: 'azure-vote-all-in-one-redis'
