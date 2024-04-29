@@ -19,6 +19,8 @@ variables:
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
 
+pool:
+  name: az-selfhosted
 stages:
 - stage: Build
   displayName: Build and push stage
