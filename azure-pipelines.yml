@@ -40,13 +40,13 @@ stages:
         tags: |
           $(tag)
     - bash: |
-       echo "##vso[task.setvariable variable=voteAppId;isOutput=true]voteap_$(Build.BuildId)_$(date '+%d%m%Y_%H_%M_%S')"
+       echo "##vso[task.setvariable variable=voteAppId;isOutput=true]voteapp_$(Build.BuildId)_$(date '+%d%m%Y_%H_%M_%S')"
     - task: Bash@3
       displayName: Rename file
       inputs:
         targetType: 'inline'
         script: |
-          mv azure-vote-all-in-one-redis.yaml azure-vote-all-in-one-redis-2.yaml'
+          mv azure-vote-all-in-one-redis.yaml azure-vote-all-in-one-redis-2.yaml
     - task: CopyFiles@2
       displayName: Copy files
       inputs:
