@@ -6,7 +6,7 @@ resources:
 - repo: self
 
 variables:
-- template: variables/vars.yml 
+- template: templates/variables/vars.yml 
 
 pool:
   name: az-selfhosted
