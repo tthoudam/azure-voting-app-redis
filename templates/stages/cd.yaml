@@ -1,3 +1,4 @@
+stages:
 - stage: CD
   dependsOn: CI
   displayName: Deploy to AKS
